@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import usuarioservice.usuarioservice.modelos.Coche;
+import usuarioservice.usuarioservice.modelos.Moto;
 import usuarioservice.usuarioservice.modelos.Usuario;
 import usuarioservice.usuarioservice.servicios.UsuarioService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/usuario")
@@ -46,8 +48,8 @@ public class UsuarioController {
         return ResponseEntity.ok(usuario);
     }
 
-    @RequestMapping("/coches/{id}")
-    public ResponseEntity<List<Coche>> getCochesByUsuarioId(@PathVariable("id") int id){
+    @RequestMapping("/coches/{usuarioId}")
+    public ResponseEntity<List<Coche>> getCochesByUsuarioId(@PathVariable("usuarioId") int id){
 
         List<Coche> listaCoches = usuarioService.getCochesByUsuarioId(id);
 
@@ -58,8 +60,8 @@ public class UsuarioController {
         }
     }
 
-    @RequestMapping("/motos/{id}")
-    public ResponseEntity<List<Coche>> getMotosByUsuarioId(@PathVariable("id") int id){
+    @RequestMapping("/motos/{usuarioId}")
+    public ResponseEntity<List<Coche>> getMotosByUsuarioId(@PathVariable("usuarioId") int id){
 
         List<Coche> listaMotos = usuarioService.getMotosByUsuarioId(id);
 
@@ -68,5 +70,20 @@ public class UsuarioController {
         } else {
             return ResponseEntity.ok(listaMotos);
         }
+    }
+
+    @PostMapping("/coche/{usuarioId}")
+    public ResponseEntity<Coche> guardarCoche(@PathVariable("usuarioId") int usuarioId, @RequestBody Coche coche){
+        return ResponseEntity.ok(usuarioService.saveCoche(usuarioId,coche));
+    }
+
+    @PostMapping("/moto/{usuarioId}")
+    public ResponseEntity<Moto> guardarMoto(@PathVariable("usuarioId") int usuarioId, @RequestBody Moto moto){
+        return ResponseEntity.ok(usuarioService.saveMoto(usuarioId,moto));
+    }
+
+    @GetMapping("/todos/{usuarioId}")
+    public  ResponseEntity<Map<String,Object>> listarTodosLosVehiculos(@PathVariable("usuarioId") int usuarioId){
+        return ResponseEntity.ok(usuarioService.getUsuarioAndVehiculos(usuarioId));
     }
 }
